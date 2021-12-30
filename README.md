@@ -7,5 +7,5 @@ A discord bot for interfacing with google's emoji kitchen
 Reilley Pfrimmer
 
 ### Emojis 
-Gboard Emoji Kitchen
+Gboard Emoji Kitchen\
 surgeon river shen
