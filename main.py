@@ -17,7 +17,6 @@ async def mix(ctx, *emojis):
   try:
     emoji1 = emojis[0]
     emoji2 = emojis[1]
-    print(emoji1, "g", emoji2)
   except IndexError:
     await ctx.send("INDEXERROR Usage: #mix `emoji1` `emoji2` (spacing doesnt matter)")
     return
@@ -32,19 +31,14 @@ async def mix(ctx, *emojis):
   listl = [emoji1, emoji2]
   u1 = str('u{:X}'.format(listl[0]).lower())
   u2 = str('u{:X}'.format(listl[1]).lower())
-  filename = "retarded/" + u1 + "_" + u2 + ".png"
-  try:
-    with open(filename, 'rb') as f:
-      picture = discord.File(f)
-      await ctx.send(file=picture)
-  except FileNotFoundError:
-    filename = "retarded/" + u2 + "_" + u1 + ".png"
-    try:
-      with open(filename, 'rb') as f:
-        picture = discord.File(f)
-        await ctx.send(file=picture)
-    except FileNotFoundError:
-      base = "https://raw.githubusercontent.com/UCYT5040/Google-Sticker-Mashup-Research/main/stickers/"
+  base = "https://raw.githubusercontent.com/b1nwal/MixerMoji/main/customs/"
+  url = base + u1 + "_" + u2 + ".png"
+  resp = requests.get(url);
+  if (resp.status_code == 404):
+    url = base + u2 + "_" + u1 + ".png"
+    resp = requests.get(url)
+    if (resp.status_code == 404):
+      base = "https://raw.githubusercontent.com/b1nwal/MixerMoji/main/stickers/"
       url = base + u1 + "_" + u2 + ".png"
       resp = requests.get(url);
       if (resp.status_code == 404):
