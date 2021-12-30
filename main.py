@@ -10,62 +10,55 @@ emojisfaces = ":grinning: :grin: :joy: :smiley: :smile: :sweat_smile: :laughing:
 emojisfaces2 = ":grimacing: :sob: :open_mouth: :cold_sweat: :scream: :astonished: :flushed: :sleeping: :dizzy_face: :face_with_spiral_eyes: :no_mouth: :face_in_clouds: :mask: :partying_face: :woozy_face: :hot_face: :cold_face: :disguised_face: :pleading_face: :face_with_monocle: :slightly_frowning_face: :slightly_smiling_face: :upside_down_face: :face_with_rolling_eyes: :zipper_mouth_face: :money_mouth_face: :face_with_thermometer: :nerd_face: :thinking_face: :face_with_head_bandage: :robot_face: :hugging_face: :face_with_cowboy_hat: :clown_face: :nauseated_face: :rolling_on_the_floor_laughing: :drooling_face: :lying_face: :sneezing_face: :face_with_raised_eyebrow: :star_struck: :zany_face: :shushing_face: :face_with_symbols_over_mouth: :face_with_hand_over_mouth: :face_vomiting: :exploding_head:"
 emojisanimals = ":mouse2: :rabbit2: :cat2: :snail: :goat: :monkey: :pig2: :octopus: :bee: :fish: :turtle: :bird: :koala: :lion_face: :scorpion: :unicorn_face: :bat: :owl: :deer: :hedgehog: :llama: :sloth: :spider: :teddy_bear: :mouse: :rabbit: :cat: :monkey_face: :pig: :bear: :panda_face: :pig_nose: :smile_cat: :joy_cat: :smiley_cat: :heart_eyes_cat: :smirk_cat: :kissing_cat: :pouting_cat: :crying_cat_face: :scream_cat: :see_no_evil: :hear_no_evil: :speak_no_evil:"
 emojismisc = ":sunny: :cloud: :snowman2: :snowman: :coffee: :skull_and_crossbones: :sparkles: :snowflake: :star: :cityscape: :night_with_stars: :city_sunset: :city_sunrise: :rainbow: :earth_africa: :earth_americas: :earth_asia: :globe_with_meridians: :first_quarter_moon_with_face: :last_quarter_moon_with_face: :sun_with_face: :star2: :stars: :cloud_tornado: :hotdog: :evergreen_tree: :cactus: :tulip: :cherry_blossom: :rose: :blossom:    :lemon: :pineapple: :strawberry: :bread: :fork_and_knife: :fork_knife_plate: :birthday: :jack_o_lantern: :christmas_tree: :balloon: :tada: :confetti_ball: :reminder_ribbon: :carousel_horse: :fishing_pole_and_fish: :headphones: :notes: :musical_score: :microbe: :crown: :ghost: :alien: :skull: :kiss: :love_letter: :gem: :bouquet: :zzz: :sweat_drops: :dash: :hankey: :dizzy: :100: :newspaper: :crystal_ball: :hole: :dark_sunglasses: :avocado: :baguette_bread: :cheese_wedge: :cupcake: :adhesive_bandage: :magic_wand: :feather:"
-zwjs = []
-def ordinate(emoji1,emoji2):
-  try:
-    emoji1 = ord(emoji1)
-    u1 = str('u{:X}'.format(emoji1).lower())
-  except TypeError:
-    u1 = edgecases[emoji1]
-  try:
-    emoji2 = ord(emoji2)
-    u2 = str('u{:X}'.format(emoji2).lower())
-  except TypeError:
-    u2 = edgecases[emoji2]
-  listl = [u1,u2]
-  return listl
+credits = {"u1f441_u1f441":512792387274276865,"u1f426_u1f494":512792387274276865,"u1f4ab_u1f4ab":512792387274276865}
+def ordinate(*emojitup):
+  emojis = emojitup[0]
+  for i in range(len(emojis)):
+    if emojis[i] == "\u200d":
+      emojis[i] = ""
+      emojis[i - 1] = ""
+  emojis = list(filter(None, emojis))
+  fin = ""
+  for i in emojis:
+    try:
+      fin += str('u{:X}'.format(ord(i)).lower()) + "_"
+    except TypeError:
+      fin += edgecases[i] + "_"
+  fin = fin[:-1]
+  return fin
 @bot.command()
-async def mix(ctx, *emojis):
+async def mix(ctx, *emojitup):
+  emojis = ""
+  for i in emojitup:
+    emojis += i
   emojis = list(emojis)
-  try:
-    emoji1 = emojis[0]
-    emoji2 = emojis[1]
-  except IndexError:
-    await ctx.send("`INDEXERROR` Usage: #mix `emoji1` `emoji2` (spacing doesnt matter)")
-    return
-  if "\u200d" in emoji1:
-    pos = emoji1.index("\u200d")
-    emoji1 = emoji1[pos + 1]
-  if "\u200d" in emoji2:
-    pos = emoji2.index("\u200d")
-    emoji2 = emoji2[pos + 1]
-  try:
-    u1,u2 = ordinate(emoji1, emoji2)
-  except KeyError:
-    await ctx.send("`KEYERROR` Usage: #mix `emoji1` `emoji2` (spacing doesnt matter)")
-    return
-  base = "https://raw.githubusercontent.com/b1nwal/MixerMoji/main/customs/"
-  url = base + u1 + "_" + u2 + ".png"
+  url = "https://raw.githubusercontent.com/b1nwal/MixerMoji/main/stickers/" + ordinate(emojis) + ".png"
   resp = requests.get(url);
   if (resp.status_code == 404):
-    url = base + u2 + "_" + u1 + ".png"
+    emojis.reverse()
+    url = "https://raw.githubusercontent.com/b1nwal/MixerMoji/main/stickers/" + ordinate(emojis) + ".png"
     resp = requests.get(url)
-  else:
-    await ctx.send(url)
     if (resp.status_code == 404):
-      base = "https://raw.githubusercontent.com/b1nwal/MixerMoji/main/stickers/"
-      url = base + u1 + "_" + u2 + ".png"
-      resp = requests.get(url);
-      if (resp.status_code == 404):
-        url = base + u2 + "_" + u1 + ".png"
-        resp = requests.get(url)
-        if (resp.status_code == 404):
-          await ctx.send("`404` Emoji Not Found (Too Sus)")
-          return
-        else:
-          await ctx.send(url)
-      else:
-        await ctx.send(url)
+      await ctx.send("`404` Combo not found")
+      return
+    else:
+      try:
+        credit = credits[ordinate(emojis)]
+        credit = await bot.fetch_user(credit)
+        credit = credit.name
+      except KeyError:
+        credit = "Google Emoji Kitchen"
+  else:
+    try:
+      credit = credits[ordinate(emojis)]
+      credit = await bot.fetch_user(credit)
+      credit = credit.name
+    except KeyError:
+      credit = "Google Emoji Keyboard"
+  embed = discord.Embed()
+  embed.set_author(name=credit)
+  embed.set_image(url=url)
+  await ctx.send(embed=embed)
 @bot.command()
 async def index(ctx):
   embed = discord.Embed(title="Compatible Emoji Index")
