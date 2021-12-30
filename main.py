@@ -43,6 +43,7 @@ async def mix(ctx, *emojis):
     u1,u2 = ordinate(emoji1, emoji2)
   except KeyError:
     await ctx.send("`KEYERROR` Usage: #mix `emoji1` `emoji2` (spacing doesnt matter)")
+    return
   base = "https://raw.githubusercontent.com/b1nwal/MixerMoji/main/customs/"
   url = base + u1 + "_" + u2 + ".png"
   resp = requests.get(url);
@@ -60,6 +61,7 @@ async def mix(ctx, *emojis):
         resp = requests.get(url)
         if (resp.status_code == 404):
           await ctx.send("`404` Emoji Not Found (Too Sus)")
+          return
         else:
           await ctx.send(url)
       else:
