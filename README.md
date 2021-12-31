@@ -1,5 +1,5 @@
 # MixerMoji
-A discord bot for interfacing with google's emoji kitchen
+A discord bot for mixing up emojis
 
 ## Contributors
 
