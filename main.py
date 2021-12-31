@@ -58,13 +58,13 @@ async def mix(ctx, *emojitup):
     except KeyError:
       credit = "Google Emoji Keyboard"
       av = "https://raw.githubusercontent.com/b1nwal/MixerMoji/main/imgs/google_icon.png"
-  embed = discord.Embed()
-  embed.set_footer(text=credit ,icon_url=av)
+  embed = discord.Embed(color=0x32a852)
+  embed.set_footer(text=credit, icon_url=av)
   embed.set_image(url=url)
   await ctx.send(embed=embed)
 @bot.command()
 async def index(ctx):
-  embed = discord.Embed(title="Compatible Emoji Index")
+  embed = discord.Embed(title="Compatible Emoji Index",color=0xf542da)
   embed.add_field(name="Most of these emojis *should* work... If they don't send me a help ticket.", value="\u200b",inline=False)
   embed.add_field(name="Faces", value=emojisfaces,inline=False)
   embed.add_field(name="Faces 2", value=emojisfaces2,inline=False)
